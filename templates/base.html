@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% block title %}
+    {{ title }}
+    {% endblock %}
+</head>
+<body>
+<header class="header sticky sticky--top js-header">
+  <div class="grid">
+    <nav class="navigation">
+      <ul class="navigation__list navigation__list--inline">
+        <li class="navigation__item"><a href="/" class="navigation__link navigation__link--is-active">Главная</a></li>
+        <li class="navigation__item"><a href="/show_orders" class="navigation__link">Заявки</a></li>
+        <li class="navigation__item"><a href="/show_emp" class="navigation__link">Сотрудники</a></li>
+        <li class="navigation__item"><a href="/show_dep" class="navigation__link">Департаменты</a></li>
+        <li class="navigation__item"><a href="/onas" class="navigation__link">О нас</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <div class="grid">
+    {% block content %}
+    {{ content }}
+    {% endblock %}
+  </div>
+</main>
+
+</body>
+</html>

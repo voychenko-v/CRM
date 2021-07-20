@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Заявки пользователей</title>
+{% endblock %}
+
+{% block content %}
+<h1>Заявки пользователей</h1>
+{% for orders in orders_list %}
+<li>{{ orders }}</li>
+{% endfor %}}
+{% endblock %}

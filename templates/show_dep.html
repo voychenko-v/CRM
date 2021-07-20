@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Департаменты</title>
+{% endblock %}
+
+{% block content %}
+<h1>Департаменты</h1>
+{% for department in department_list %}
+<li>{{ department }}</li>
+{% endfor %}}
+{% endblock %}
