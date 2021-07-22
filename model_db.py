@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
-from flask import Flask, request
+from flask import Flask, request, render_template, url_for
 
 app = Flask(__name__)
 DB_URL = 'postgresql://postgres:postgresdb@localhost:5432/order_service_db'
@@ -20,6 +20,12 @@ class Employee(db.Model):
     fio = db.Column(db.String(100))
     position = db.Column(db.String(25))
     department_id = db.Column(db.Integer, db.ForeignKey('department.department_id'), nullable=False)
+
+    def __str__(self):
+        return f"Employees_id: {self.employees_id}\n" \
+               f"Fio: {self.fio}\n" \
+               f"Position: {self.position}\n" \
+               f"department_id: {self.department_id}\n"
 
 
 class Customers(db.Model):
@@ -57,6 +63,26 @@ class BotInfo(db.Model):
     id_chat = db.Column(db.Integer)
     message = db.Column(db.String(100))
     dt_message = db.Column(db.DateTime, default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+
+@app.route('/show_orders')
+def show_orders():
+    return render_template('show_orders.html', orders_list=Order.query.all())
+
+
+@app.route('/show_emp')
+def show_emp():
+    return render_template('show_emp.html', employees_list=Employee.query.all())
+
+
+@app.route('/show_dep')
+def show_dep():
+    return render_template('show_dep.html', department_list=Department.query.all())
+
 
 @app.route("/ping")
 def ping():

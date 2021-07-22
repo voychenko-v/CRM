@@ -15,7 +15,10 @@
     <th> ИД департамента </th>
    </tr>
    {% for employees in employees_list %}
-   <tr><td>{{ employees[0] }}</td><td>{{ employees[1] }}</td><td>{{ employees[2] }}</td><td>{{ employees[3] }}</td></tr>
-   {% endfor %}}
+   <tr>
+       <td>{{ employees.employees_id }}</td><td>{{ employees.fio }}</td>
+       <td>{{ employees.position }}</td><td>{{ employees.department_id }}</td>
+   </tr>
+   {% endfor %}
   </table>
 {% endblock %}

@@ -6,7 +6,16 @@
 
 {% block content %}
 <h1>Департаменты</h1>
-{% for department in department_list %}
-<li>{{ department }}</li>
-{% endfor %}}
+  <table border="1">
+   <caption>Таблица департаментов</caption>
+   <tr>
+    <th> ИД </th>
+    <th> Дерартамент </th>
+   </tr>
+   {% for department in department_list %}
+   <tr>
+       <td>{{ department.department_id }}</td><td>{{ department.department_name }}</td>
+   </tr>
+   {% endfor %}
+  </table>
 {% endblock %}

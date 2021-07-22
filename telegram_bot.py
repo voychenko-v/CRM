@@ -9,7 +9,7 @@ LINK = t.me/Home_Work_15_Bot
 env = Env()
 TOKEN = env.str('TOKEN')
 
-bot = TeleBot(token='TOKEN')
+bot = TeleBot(token=TOKEN)
 
 
 def save_message(message):
@@ -24,6 +24,5 @@ def save_message(message):
 def order_message(message):
     bot.reply_to(message, 'Для оформленния заявки - введите сообщенние')
     bot.register_next_step_handler(message, save_message)
-
 
 bot.polling()
