@@ -6,16 +6,25 @@
 
 {% block content %}
 <h1>Департаменты</h1>
-  <table border="1">
-   <caption>Таблица департаментов</caption>
-   <tr>
-    <th> ИД </th>
-    <th> Дерартамент </th>
-   </tr>
-   {% for department in department_list %}
-   <tr>
-       <td>{{ department.department_id }}</td><td>{{ department.department_name }}</td>
-   </tr>
-   {% endfor %}
-  </table>
+    <div>
+        <form action="/create_department" method="GET">
+        <input type="submit" name="department_button" value="Создать департамент">
+        </form>
+        <table border="1">
+        <caption>Таблица департаментов</caption>
+        <tr>
+        <th> ИД </th>
+        <th> Дерартамент </th>
+        <th> </th>
+        <th> </th>
+        </tr>
+        {% for department in department_list %}
+        <tr>
+            <td>{{ department.department_id }}</td><td>{{ department.department_name }}</td>
+            <td><a href="/edit_department/{{ department.department_id }}">Редактировать</a></td>
+            <td><a href="/delete_department/{{ department.department_id }}">Удалить</a></td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
 {% endblock %}

@@ -5,3 +5,4 @@ envparse==0.2.0
 pyTelegramBotAPI==3.8.1
 requests==2.26.0
 psycopg2==2.9.1
+flask-migrate==2.5.0

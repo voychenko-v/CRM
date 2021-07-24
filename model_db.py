@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
-from flask import Flask, request, render_template, url_for
+from flask import Flask, request, render_template, url_for, Response, redirect
 
 app = Flask(__name__)
 DB_URL = 'postgresql://postgres:postgresdb@localhost:5432/order_service_db'
@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 
 class Department(db.Model):
     department_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    department_name = db.Column(db.String(25))
+    department_name = db.Column(db.String(25), unique=True)
 
 
 class Employee(db.Model):
@@ -38,7 +38,7 @@ class Customers(db.Model):
 
 class Order(db.Model):
     order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    created_dt = db.Column(db.DateTime, nullable=False, default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    created_dt = db.Column(db.DateTime, nullable=False, default=datetime.now().strftime("%y.%m.%d %H:%M"))
     update_dt = db.Column(db.DateTime, nullable=True)
     order_type = db.Column(db.String(20))
     description = db.Column(db.String(100))
@@ -64,19 +64,28 @@ class BotInfo(db.Model):
     message = db.Column(db.String(100))
     dt_message = db.Column(db.DateTime, default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
+
 @app.route("/")
 def index():
     return render_template('index.html')
 
 
-@app.route('/show_orders')
-def show_orders():
-    return render_template('show_orders.html', orders_list=Order.query.all())
-
-
-@app.route('/show_emp')
-def show_emp():
-    return render_template('show_emp.html', employees_list=Employee.query.all())
+# Блок роутов "Департамент"
+@app.route('/create_department', methods=['POST', 'GET'])
+def create_department():
+    if request.method == 'POST':
+        data_department = request.form['department']
+        if data_department == '':
+            return render_template('base.html', content='Ошибка: Вы ничего не ввели')
+        department_profile = Department(department_name=data_department)
+        try:
+            db.session.add(department_profile)
+            db.session.commit()
+            return redirect('/show_dep')
+        except:
+            return render_template('base.html', content='Департамент существует')
+    else:
+        return render_template('create_department.html')
 
 
 @app.route('/show_dep')
@@ -84,67 +93,138 @@ def show_dep():
     return render_template('show_dep.html', department_list=Department.query.all())
 
 
-@app.route("/ping")
-def ping():
-    return f'OK {datetime.now()}'
-
-
-@app.route('/insert_order', methods=['POST'])
-def insert_db():
+@app.route('/edit_department/<int:id>', methods=['POST', 'GET'])
+def edit_department(id):
+    department = Department.query.get(id)
     if request.method == 'POST':
-        data_order = json.loads(request.data)
-        order_profile = Order(order_type=data_order['order_type'],
-                              description=data_order['description'],
-                              status=data_order['status'],
-                              serial_no=data_order['serial_no'],
-                              creator_id=data_order['creator_id'])
-        db.session.add(order_profile)
-        db.session.flush()
+        department.department_name = request.form['department_name']
+        try:
+            db.session.commit()
+            return redirect('/show_dep')
+        except:
+            return 'При редактировании произошла ошибка'
+    else:
+        return render_template('edit_department.html', department=department)
+
+
+@app.route('/delete_department/<int:id>')
+def delete_department(id):
+    department = Department.query.get_or_404(id)
+    try:
+        db.session.delete(department)
         db.session.commit()
-        return 'Create'
+        return redirect('/show_dep')
+    except:
+        return render_template('base.html', content='При удалении произошла ошибка')
 
 
-@app.route('/insert_employee', methods=['POST'])
-def insert_employee():
+# Блок роутов "Сотрудники"
+@app.route('/show_emp')
+def show_emp():
+    return render_template('show_emp.html', employees_list=Employee.query.all())
+
+
+@app.route('/create_emp', methods=['POST', 'GET'])
+def create_emp():
     if request.method == 'POST':
-        data_employee = json.loads(request.data)
-        employee_profile = Employee(fio=data_employee['fio'],
-                                    position=data_employee['position'],
-                                    department_id=data_employee['department_id'])
-        db.session.add(employee_profile)
-        db.session.flush()
-        db.session.commit()
-        return 'Create'
+        fio = request.form['fio']
+        position = request.form['position']
+        department_id = request.form['department_id']
+        employee_profile = Employee(fio=fio, position=position, department_id=department_id)
+        try:
+            db.session.add(employee_profile)
+            db.session.commit()
+            return redirect('/show_emp')
+        except:
+            return render_template('base.html', content='При добавлении сотретрудника произошла ошибка')
+    else:
+        return render_template('create_emp.html')
 
 
-@app.route('/insert_department', methods=['POST'])
-def insert_department():
+@app.route('/edit_emp/<int:id>', methods=['POST', 'GET'])
+def edit_emp(id):
+    employee = Employee.query.get(id)
     if request.method == 'POST':
-        data_department = json.loads(request.data)
-        department_profile = Department(department_name=data_department['department_name'])
-        db.session.add(department_profile)
-        db.session.flush()
+        employee.fio = request.form['fio']
+        employee.position = request.form['position']
+        employee.department_id = request.form['department_id']
+        try:
+            db.session.commit()
+            return redirect('/show_emp')
+        except:
+            return 'При редактировании сотрудника произошла ошибка'
+    else:
+        return render_template('edit_emp.html', employee=employee)
+
+
+@app.route('/delete_emp/<int:id>')
+def delete_emp(id):
+    employee = Employee.query.get_or_404(id)
+    try:
+        db.session.delete(employee)
         db.session.commit()
-        return 'Create'
+        return redirect('/show_emp')
+    except:
+        return render_template('base.html', content='При удалении произошла ошибка')
 
 
-@app.route('/change_status', methods=['PATCH'])
-def change_status():
-    if request.method == 'PATCH':
-        data_status = json.loads(request.data)
-        get_id = Order.query.filter_by(order_id=data_status['order_id']).first()
-        get_id.status = data_status['new_status']
-        get_id.update_dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# Блок роутов "Заявок"
+@app.route('/show_order')
+def show_order():
+    order_list = Order.query.join(Employee, Order.creator_id == Employee.employees_id)\
+        .add_columns(Order.order_id, Order.created_dt, Order.update_dt, Order.order_type,
+                     Order.description, Order.status, Order.serial_no, Employee.fio)
+    return render_template('show_order.html', order_list=order_list)
+
+
+@app.route('/create_order', methods=['POST', 'GET'])
+def create_order():
+    if request.method == 'POST':
+        order_type = request.form['order_type']
+        description = request.form['description']
+        status = request.form['status']
+        serial_no = request.form['serial_no']
+        creator_id = request.form['creator_id']
+        order_profile = Order(order_type=order_type, description=description, status=status,
+                              serial_no=serial_no, creator_id=creator_id)
+        try:
+            db.session.add(order_profile)
+            db.session.commit()
+            return redirect('/show_order')
+        except:
+            return render_template('base.html', content='При добавлении заявки произошла ошибка')
+    else:
+        return render_template('create_order.html')
+
+
+@app.route('/edit_order/<int:id>', methods=['POST', 'GET'])
+def edit_order(id):
+    order = Order.query.get(id)
+    if request.method == 'POST':
+        order.order_type = request.form['order_type']
+        order.description = request.form['description']
+        order.status = request.form['status']
+        order.serial_no = request.form['serial_no']
+        order.creator_id = request.form['creator_id']
+        order.update_dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        try:
+            db.session.commit()
+            return redirect('/show_order')
+        except:
+            return 'При редактировании сотрудника произошла ошибка'
+    else:
+        return render_template('edit_order.html', order=order)
+
+
+@app.route('/delete_order/<int:id>')
+def delete_order(id):
+    order = Order.query.get_or_404(id)
+    try:
+        db.session.delete(order)
         db.session.commit()
-        return f'Change_status'
-
-
-@app.route('/delete_order/<string:delete_id>', methods=['DELETE'])
-def delete_order(delete_id):
-    del_id = Order.query.filter_by(order_id=delete_id).first()
-    db.session.delete(del_id)
-    db.session.commit()
-    return f'Ok - delete_order_id: {delete_id}'
+        return redirect('/show_order')
+    except:
+        return render_template('base.html', content='При удалении произошла ошибка')
 
 
 @app.route('/search_order_id/<string:search_id>', methods=['GET'])

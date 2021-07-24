@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Редактирование департаментов</title>
+{% endblock %}
+
+{% block content %}
+<p>Введите новые данные</p>
+<form method="POST">
+        <p>Департамент : {{ department.department_id }}</p>
+        <input  type="text" name="department_name" value="{{ department.department_name}}">
+        <input  type="submit" value="Редактировать">
+</form>
+{% endblock %}

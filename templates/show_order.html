@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Заявки пользователей</title>
+{% endblock %}
+
+{% block content %}
+<h1 align="center">Заявки</h1>
+<div align="center">
+<a href="/create_order" class="floating-button" >Cоздать</a>
+</div>
+  <table border="1" >
+   <tr>
+    <th> ИД </th>
+    <th > Дата создания </th>
+    <th> Дата обновления </th>
+    <th> Тип </th>
+    <th> Описание </th>
+    <th> Статус </th>
+    <th> Серийный номер </th>
+    <th> Менеджер </th>
+    <th>  </th>
+    <th>  </th>
+   </tr>
+   {% for order in order_list %}
+   <tr>
+       <td align="center">{{ order.order_id  }}</td><td align="center">{{ order.created_dt }}</td>
+       <td align="center">{{ order.update_dt }}</td><td>{{ order.order_type }}</td>
+       <td>{{ order.description }}</td><td>{{ order.status }}</td>
+       <td>{{ order.serial_no }}</td><td>{{ order.fio }}</td>
+       <td><a href="/edit_order/{{ order.order_id }}">Редактировать</a></td>
+       <td><a href="/delete_order/{{ order.order_id }}">Удалить</a></td>
+   </tr>
+   {% endfor %}
+  </table>
+{% endblock %}
