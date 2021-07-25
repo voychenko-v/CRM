@@ -69,7 +69,7 @@ def index():
     return render_template('index.html')
 
 
-# Блок роутов "Департамент"
+# Блок роутов "Департамент" - вывод, добавление, редактирование, удаление
 @app.route('/create_department', methods=['POST', 'GET'])
 def create_department():
     if request.method == 'POST':
@@ -117,7 +117,7 @@ def delete_department(id):
         return render_template('base.html', content='При удалении произошла ошибка')
 
 
-# Блок роутов "Сотрудники"
+# Блок роутов "Сотрудники" - вывод, добавление, редактирование, удаление
 @app.route('/show_emp')
 def show_emp():
     return render_template('show_emp.html', employees_list=Employee.query.all())
@@ -167,7 +167,7 @@ def delete_emp(id):
         return render_template('base.html', content='При удалении произошла ошибка')
 
 
-# Блок роутов "Заявок"
+# Блок роутов "Заявок" - вывод, добавление, редактирование, удаление
 @app.route('/show_order')
 def show_order():
     order_list = Order.query.join(Employee, Order.creator_id == Employee.employees_id)\
@@ -226,7 +226,7 @@ def delete_order(id):
         return render_template('base.html', content='При удалении произошла ошибка')
 
 
-# Блок роутов "Клиентов"
+# Блок роутов "Клиентов" - вывод, добавление, редактирование, удаление
 @app.route('/show_cus')
 def show_cus():
     return render_template('show_cus.html', customers_list=Customers.query.all())
@@ -276,7 +276,7 @@ def delete_cus(id):
         return render_template('base.html', content='При удалении произошла ошибка')
 
 
-# Блок роутов "Клиентов"
+# Блок роутов "Клиентов" - вывод, добавление, редактирование, удаление
 @app.route('/show_tel')
 def show_tel():
     return render_template('show_tel.html', telegram_list=BotInfo.query.all())
