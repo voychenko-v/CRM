@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Телеграм</title>
+{% endblock %}
+
+{% block content %}
+<div align="center">
+    <h1>Телеграм</h1>
+    <table border="1" >
+       <tr>
+        <th> ИД </th>
+        <th> Никнейм </th>
+        <th> ИД чат </th>
+        <th> Сообщение </th>
+        <th> Дата </th>
+        <th> </th>
+        <th> </th>
+       </tr>
+       {% for telegram in telegram_list %}
+       <tr>
+           <td>{{ telegram.id_message }}</td><td>{{ telegram.nickname }}</td>
+           <td>{{ telegram.id_chat }}</td><td>{{ telegram.message }}</td>
+           <td>{{ telegram.dt_message }}</td>
+           <td><a href="/edit_tel/{{ telegram.id_message }}">Редактировать</a></td>
+           <td><a href="/delete_tel/{{ telegram.id_message }}">Удалить</a></td>
+       </tr>
+       {% endfor %}
+    </table>
+</div>
+{% endblock %}

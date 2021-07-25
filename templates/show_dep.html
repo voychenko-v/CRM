@@ -5,11 +5,10 @@
 {% endblock %}
 
 {% block content %}
+<div align="center">
 <h1>Департаменты</h1>
     <div>
-        <form action="/create_department" method="GET">
-        <input type="submit" name="department_button" value="Создать департамент">
-        </form>
+        <a href="/create_department" class="floating-button">Cоздать</a>
         <table border="1">
         <caption>Таблица департаментов</caption>
         <tr>
@@ -27,4 +26,5 @@
         {% endfor %}
         </table>
     </div>
+<div>
 {% endblock %}

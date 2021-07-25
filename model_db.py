@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import json
-from flask import Flask, request, render_template, url_for, Response, redirect
+from flask import Flask, request, render_template, url_for, redirect
 
 app = Flask(__name__)
 DB_URL = 'postgresql://postgres:postgresdb@localhost:5432/order_service_db'
@@ -180,9 +179,9 @@ def show_order():
 @app.route('/create_order', methods=['POST', 'GET'])
 def create_order():
     if request.method == 'POST':
-        order_type = request.form['order_type']
+        order_type = 'Сайт'
+        status = 'Новая'
         description = request.form['description']
-        status = request.form['status']
         serial_no = request.form['serial_no']
         creator_id = request.form['creator_id']
         order_profile = Order(order_type=order_type, description=description, status=status,
@@ -191,7 +190,7 @@ def create_order():
             db.session.add(order_profile)
             db.session.commit()
             return redirect('/show_order')
-        except:
+        except :
             return render_template('base.html', content='При добавлении заявки произошла ошибка')
     else:
         return render_template('create_order.html')
@@ -227,10 +226,87 @@ def delete_order(id):
         return render_template('base.html', content='При удалении произошла ошибка')
 
 
-@app.route('/search_order_id/<string:search_id>', methods=['GET'])
-def search_order_id(search_id):
-    search_order = Order.query.filter_by(order_id=search_id).first()
-    return f'{search_order}'
+# Блок роутов "Клиентов"
+@app.route('/show_cus')
+def show_cus():
+    return render_template('show_cus.html', customers_list=Customers.query.all())
+
+
+@app.route('/create_cus', methods=['POST', 'GET'])
+def create_cus():
+    if request.method == 'POST':
+        fio = request.form['fio']
+        number_phone = request.form['number_phone']
+        email = request.form['email']
+        customer_profile = Customers(fio=fio, number_phone=number_phone, email=email)
+        try:
+            db.session.add(customer_profile)
+            db.session.commit()
+            return redirect('/show_cus')
+        except:
+            return render_template('base.html', content='При добавлении клиента произошла ошибка')
+    else:
+        return render_template('create_cus.html')
+
+
+@app.route('/edit_cus/<int:id>', methods=['POST', 'GET'])
+def edit_cus(id):
+    customer = Customers.query.get(id)
+    if request.method == 'POST':
+        customer.fio = request.form['fio']
+        customer.number_phone = request.form['number_phone']
+        customer.email = request.form['email']
+        try:
+            db.session.commit()
+            return redirect('/show_cus')
+        except:
+            return 'При редактировании сотрудника произошла ошибка'
+    else:
+        return render_template('edit_cus.html', customer=customer)
+
+
+@app.route('/delete_cus/<int:id>')
+def delete_cus(id):
+    customer = Customers.query.get_or_404(id)
+    try:
+        db.session.delete(customer)
+        db.session.commit()
+        return redirect('/show_cus')
+    except:
+        return render_template('base.html', content='При удалении произошла ошибка')
+
+
+# Блок роутов "Клиентов"
+@app.route('/show_tel')
+def show_tel():
+    return render_template('show_tel.html', telegram_list=BotInfo.query.all())
+
+
+@app.route('/edit_tel/<int:id>', methods=['POST', 'GET'])
+def edit_tel(id):
+    telegram = BotInfo.query.get(id)
+    if request.method == 'POST':
+        telegram.nickname = request.form['nickname']
+        telegram.id_chat = request.form['id_chat']
+        telegram.message = request.form['message']
+        try:
+            db.session.commit()
+            return redirect('/show_tel')
+        except:
+            return 'При редактировании сотрудника произошла ошибка'
+    else:
+        return render_template('edit_tel.html', telegram=telegram)
+
+
+@app.route('/delete_tel/<int:id>')
+def delete_tel(id):
+    telegram = BotInfo.query.get_or_404(id)
+    try:
+        db.session.delete(telegram)
+        db.session.commit()
+        return redirect('/show_tel')
+    except:
+        return render_template('base.html', content='При удалении произошла ошибка')
 
 
 if __name__ == '__main__':

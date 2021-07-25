@@ -5,27 +5,27 @@
 {% endblock %}
 
 {% block content %}
-<h1>Сотрудники</h1>
-<form action="/create_emp" method="GET">
-<input type="submit" name="employees_button" value="Создать сотрудника">
-</form>
-  <table border="1">
-   <caption>Таблица сотрудников</caption>
-   <tr>
-    <th> ИД </th>
-    <th> ФИО </th>
-    <th> Должность </th>
-    <th> ИД департамента </th>
-    <th> </th>
-    <th> </th>
-   </tr>
-   {% for employees in employees_list %}
-   <tr>
-       <td>{{ employees.employees_id }}</td><td>{{ employees.fio }}</td>
-       <td>{{ employees.position }}</td><td>{{ employees.department_id }}</td>
-       <td><a href="/edit_emp/{{ employees.employees_id }}">Редактировать</a></td>
-       <td><a href="/delete_emp/{{ employees.employees_id }}">Удалить</a></td>
-   </tr>
-   {% endfor %}
-  </table>
+<div align="center">
+    <h1>Сотрудники</h1>
+    <a href="/create_emp" class="floating-button">Cоздать</a>
+    <table border="1" >
+       <caption>Таблица сотрудников</caption>
+       <tr>
+        <th> ИД </th>
+        <th> ФИО </th>
+        <th> Должность </th>
+        <th> ИД департамента </th>
+        <th> </th>
+        <th> </th>
+       </tr>
+       {% for employees in employees_list %}
+       <tr>
+           <td>{{ employees.employees_id }}</td><td>{{ employees.fio }}</td>
+           <td>{{ employees.position }}</td><td>{{ employees.department_id }}</td>
+           <td><a href="/edit_emp/{{ employees.employees_id }}">Редактировать</a></td>
+           <td><a href="/delete_emp/{{ employees.employees_id }}">Удалить</a></td>
+       </tr>
+       {% endfor %}
+    </table>
+</div>
 {% endblock %}
