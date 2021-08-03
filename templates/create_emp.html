@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>Для создания сотрудника, введите данные</p>
+    <form method="POST">
+            <input  type="text" name="fio" placeholder="ФИО"><br>
+            <input  type="text" name="position" placeholder="Должность"><br>
+            <input  type="text" name="department_id" placeholder="ИД департамента"><br>
+            <input  type="submit" value="Создать">
+    </form>
+{% endblock %}

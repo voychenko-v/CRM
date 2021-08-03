@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Редактирование заявки</title>
+{% endblock %}
+
+{% block content %}
+<p>Введите новые данные</p>
+<form method="POST">
+        <p>ИД заявки : {{ order.order_id }}</p>
+        <input  type="text" name="order_type" value="{{ order.order_type }}"><br>
+        <input  type="text" name="description" value="{{ order.description }}"><br>
+        <input  type="text" name="status" value="{{ order.status }}"><br>
+        <input  type="text" name="serial_no" value="{{ order.serial_no }}"><br>
+        <input  type="text" name="creator_id" value="{{ order.creator_id }}"><br>
+        <input  type="submit" value="Редактировать">
+</form>
+{% endblock %}

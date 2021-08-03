@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Департаменты</title>
+{% endblock %}
+
+{% block content %}
+<div align="center">
+<h1>Департаменты</h1>
+    <div>
+        <a href="/create_department" class="floating-button">Cоздать</a>
+        <table border="1">
+        <caption>Таблица департаментов</caption>
+        <tr>
+        <th> ИД </th>
+        <th> Дерартамент </th>
+        <th> </th>
+        <th> </th>
+        </tr>
+        {% for department in department_list %}
+        <tr>
+            <td>{{ department.department_id }}</td><td>{{ department.department_name }}</td>
+            <td><a href="/edit_department/{{ department.department_id }}">Редактировать</a></td>
+            <td><a href="/delete_department/{{ department.department_id }}">Удалить</a></td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
+<div>
+{% endblock %}

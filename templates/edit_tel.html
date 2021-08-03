@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Редактирование заявок телеграм</title>
+{% endblock %}
+
+{% block content %}
+<p>Введите новые данные</p>
+<form method="POST">
+        <p>ИД чата : {{ telegram.id_message }}</p>
+        <input  type="text" name="nickname" value="{{ telegram.nickname }}"><br>
+        <input  type="text" name="id_chat" value="{{ telegram.id_chat }}"><br>
+        <input  type="text" name="message" value="{{ telegram.message }}"><br>
+        <input  type="text" name="dt_message" value="{{ telegram.dt_message }}"><br>
+        <input  type="submit" value="Редактировать">
+</form>
+{% endblock %}

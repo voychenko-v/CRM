@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>Для создания клиента, введите данные</p>
+    <form method="POST">
+            <input  type="text" name="fio" placeholder="ФИО"><br>
+            <input  type="text" name="number_phone" placeholder="Телефон"><br>
+            <input  type="text" name="email" placeholder="Почта"><br>
+            <input  type="submit" value="Создать">
+    </form>
+{% endblock %}

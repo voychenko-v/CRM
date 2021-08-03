@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>Для создания департамента, введите его название</p>
+<form method="POST">
+    <p>
+        <label >Департамент</label>
+        <input  type="text" name="department">
+        <input  type="submit" value="Создать">
+    </p>
+</form>
+
+{% endblock %}
